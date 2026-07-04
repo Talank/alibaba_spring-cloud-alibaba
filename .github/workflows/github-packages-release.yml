@@ -1,14 +1,10 @@
 name: GitHub Packages Release
 on:
-  push:
-    branches:
-      - 2023.x
-      - 2025.0.x
-      - 2025.1.x
+  workflow_dispatch:
 jobs:
   release:
     name: Release
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
       packages: write
@@ -48,3 +44,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Delete snapshots from the Maven local repository
         run: find ~/.m2/repository -type d -name '*-SNAPSHOT' -print -exec rm -r {} +
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+      fail-fast: false
